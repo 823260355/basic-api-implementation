@@ -85,6 +85,40 @@ class RsListApplicationTests {
                 .andExpect(jsonPath("$[3].keyword",is("分类4")));
     }
 
+    @Test
+    void del_event_by_index() throws Exception {
+        mockMvc.perform(get("/rs/list"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$",hasSize(3)));
+
+        mockMvc.perform(delete("/rs/1"))
+                .andExpect(status().isOk());
+
+        mockMvc.perform(get("/rs/list"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$",hasSize(2)));
+    }
+
+    @Test
+    void update_event_by_eventName_or_keyword() throws Exception {
+        mockMvc.perform(get("/rss/1?eventName=热搜第一条事件&keyword=人气分类"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.eventName", is("热搜第一条事件")))
+                .andExpect(jsonPath("$.keyword", is("人气分类")));
+
+        mockMvc.perform(get("/rss/2?eventName=热搜第二条事件"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.eventName", is("热搜第二条事件")))
+                .andExpect(jsonPath("$.keyword", is("分类2")));
+
+        mockMvc.perform(get("/rss/3?keyword=人气分类3"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.eventName",is("第三条事件")))
+                .andExpect(jsonPath("$.keyword",is("人气分类3")));
+
+
+    }
+
 
 
 }

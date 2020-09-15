@@ -41,5 +41,27 @@ public class RsController {
       rsList.add(rsEvent);
   }
 
+  @DeleteMapping("/rs/{index}")
+  public void delEvent(@PathVariable int index){
+      rsList.remove(index-1);
+  }
 
+  @GetMapping("/rss/{index}")
+  public RsEvent updateEvent(@PathVariable int index,
+                          @RequestParam(required = false) String eventName,
+                          @RequestParam(required = false) String keyword){
+
+      if (eventName !=null && keyword ==null){
+          RsEvent rsEvent = rsList.get(index - 1);
+          rsList.set(index-1,new RsEvent(eventName,rsEvent.getKeyword()));
+      }
+      if (eventName ==null && keyword !=null){
+          RsEvent rsEvent = rsList.get(index - 1);
+          rsList.set(index-1,new RsEvent(rsEvent.getEventName(),keyword));
+      }
+      if (eventName !=null && keyword != null){
+          rsList.set(index-1,new RsEvent(eventName,keyword));
+      }
+      return rsList.get(index-1);
+  }
 }
