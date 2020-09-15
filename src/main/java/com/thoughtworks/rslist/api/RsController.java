@@ -14,8 +14,13 @@ public class RsController {
   private List<String> rsList = Arrays.asList("第一条事件","第二条事件","第三条事件");
 
   @GetMapping("/rs/list")
-  public String getAllRsEvent(){
-    return rsList.toString();
+  public String geAllEvent(@RequestParam(required = false) Integer start,
+                              @RequestParam(required = false) Integer end
+                            ){
+      if (start == null || end == null) {
+        return rsList.toString();
+      }
+      return rsList.subList(start-1,end).toString();
   }
 
   @GetMapping("rs/{index}")
@@ -23,9 +28,5 @@ public class RsController {
     return rsList.get(index-1);
   }
 
-  @GetMapping("/rs/event")
-  public String getRangeEvent(int start,int end){
-    return rsList.subList(start-1,end).toString();
-  }
 
 }
