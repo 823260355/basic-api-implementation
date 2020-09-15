@@ -1,5 +1,6 @@
 package com.thoughtworks.rslist.api;
 
+import com.thoughtworks.rslist.dto.RsEvent;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -9,34 +10,36 @@ import java.util.List;
 @RestController
 public class RsController {
 
-  private List<String> rsList = initRsList();
+  private List<RsEvent> rsList = initRsList();
 
-  private List<String> initRsList(){
-      ArrayList<String> tempList = new ArrayList<>();
-      tempList.add("第一条事件");
-      tempList.add("第二条事件");
-      tempList.add("第三条事件");
+  private List<RsEvent> initRsList(){
+      ArrayList<RsEvent> tempList = new ArrayList<>();
+      tempList.add(new RsEvent("第一条事件","分类1"));
+      tempList.add(new RsEvent("第二条事件","分类2"));
+      tempList.add(new RsEvent("第三条事件","分类3"));
+
       return tempList;
   }
 
     @GetMapping("/rs/list")
-  public String geAllEvent(@RequestParam(required = false) Integer start,
+  public List<RsEvent> geAllEvent(@RequestParam(required = false) Integer start,
                               @RequestParam(required = false) Integer end
                             ){
       if (start == null || end == null) {
-        return rsList.toString();
+        return rsList;
       }
-      return rsList.subList(start-1,end).toString();
+      return rsList.subList(start-1,end);
   }
 
   @GetMapping("/rs/{index}")
-  public String getOneEvent(@PathVariable int index){
+  public RsEvent getOneEvent(@PathVariable int index){
     return rsList.get(index-1);
   }
 
   @PostMapping("/rs/event")
-  public void addEventHaveEventNameAndKeyword(@RequestBody String addString){
-      rsList.add(addString);
+  public void addEventHaveEventNameAndKeyword(@RequestBody RsEvent rsEvent){
+      rsList.add(rsEvent);
   }
+
 
 }
