@@ -43,4 +43,14 @@ class RsListApplicationTests {
         assertEquals("第一条事件",response.getContentAsString());
     }
 
+    @Test
+    void get_event_by_start_to_end_range() throws Exception {
+        MvcResult mvcResult = mockMvc.perform(get("/rs/event?start=1&end=3"))
+                .andReturn();
+        MockHttpServletResponse response = mvcResult.getResponse();
+        int status = response.getStatus();
+        assertEquals(200,status);
+        assertEquals("[第一条事件, 第二条事件, 第三条事件]",response.getContentAsString());
+    }
+
 }
