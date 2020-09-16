@@ -44,16 +44,14 @@ public class RsController {
   }
 
   @PostMapping("/rs/event")
-  public void addEventHaveEventNameAndKeyword(@Valid @RequestBody RsEvent rsEvent){
+  public ResponseEntity addEventHaveEventNameAndKeyword(@Valid @RequestBody RsEvent rsEvent){
       for (int i = 0; i < rsList.size(); i++) {
           if (rsEvent.getUserInfo().getUserName().equals(rsList.get(i).getUserInfo().getUserName())){
               rsList.add(rsEvent);
-              return;
+              return ResponseEntity.status(201).body(i);
           }
       }
-
-
-
+      return ResponseEntity.badRequest().build();
   }
 
   @DeleteMapping("/rs/{index}")
