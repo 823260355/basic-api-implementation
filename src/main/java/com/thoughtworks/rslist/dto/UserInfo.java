@@ -36,7 +36,9 @@ public class UserInfo {
     @NotNull
     private String gender;
     @NotNull
-    @Pattern(regexp = "^1(\\d){10}$")
+    @Pattern(regexp = "[a-zA-Z_]{1,}[0-9]{0,}@(([a-zA-z0-9]-*){1,}\\\\.){1,3}[a-zA-z\\\\-]{1,}")
     private String email;
+    @NotNull
+    @Pattern(regexp = "^1(\\d){10}$")
     private String phone;
 }

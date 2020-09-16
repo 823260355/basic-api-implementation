@@ -62,4 +62,84 @@ class UserControllerTest {
 
     }
 
+    @Test
+    void register_user_age_less_than_100() throws Exception {
+
+        UserInfo userInfo = new UserInfo("lili", 101, "female", "a@thoughtworks.com", "18888888888");
+        ObjectMapper objectMapper = new ObjectMapper();
+        String json = objectMapper.writeValueAsString(userInfo);
+        mockMvc.perform(post("/user/register").content(json).contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    void register_user_age_more_than_18() throws Exception {
+
+        UserInfo userInfo = new UserInfo("lili", 17, "female", "a@thoughtworks.com", "18888888888");
+        ObjectMapper objectMapper = new ObjectMapper();
+        String json = objectMapper.writeValueAsString(userInfo);
+        mockMvc.perform(post("/user/register").content(json).contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    void register_user_age_no_empty() throws Exception {
+
+        UserInfo userInfo = new UserInfo("lili", null, "female", "a@thoughtworks.com", "18888888888");
+        ObjectMapper objectMapper = new ObjectMapper();
+        String json = objectMapper.writeValueAsString(userInfo);
+        mockMvc.perform(post("/user/register").content(json).contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    void register_user_gender_no_empty() throws Exception {
+
+        UserInfo userInfo = new UserInfo("lili", 20, "", "a@thoughtworks.com", "18888888888");
+        ObjectMapper objectMapper = new ObjectMapper();
+        String json = objectMapper.writeValueAsString(userInfo);
+        mockMvc.perform(post("/user/register").content(json).contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    void register_user_email_no_empty() throws Exception {
+
+        UserInfo userInfo = new UserInfo("lili", 20, "", "", "18888888888");
+        ObjectMapper objectMapper = new ObjectMapper();
+        String json = objectMapper.writeValueAsString(userInfo);
+        mockMvc.perform(post("/user/register").content(json).contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    void register_user_email_no_false() throws Exception {
+
+        UserInfo userInfo = new UserInfo("lili", 20, "", "1", "18888888888");
+        ObjectMapper objectMapper = new ObjectMapper();
+        String json = objectMapper.writeValueAsString(userInfo);
+        mockMvc.perform(post("/user/register").content(json).contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    void register_user_phone_no_empty() throws Exception {
+
+        UserInfo userInfo = new UserInfo("lili", 20, "", "1", "");
+        ObjectMapper objectMapper = new ObjectMapper();
+        String json = objectMapper.writeValueAsString(userInfo);
+        mockMvc.perform(post("/user/register").content(json).contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    void register_user_phone_no_false() throws Exception {
+
+        UserInfo userInfo = new UserInfo("lili", 20, "", "1", "123");
+        ObjectMapper objectMapper = new ObjectMapper();
+        String json = objectMapper.writeValueAsString(userInfo);
+        mockMvc.perform(post("/user/register").content(json).contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest());
+    }
+
 }
