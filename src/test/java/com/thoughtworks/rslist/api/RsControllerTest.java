@@ -2,6 +2,7 @@ package com.thoughtworks.rslist.api;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.thoughtworks.rslist.dto.RsEvent;
+import com.thoughtworks.rslist.dto.UserInfo;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -57,12 +58,12 @@ class RsControllerTest {
                 .andExpect(jsonPath("$[2].keyword", is("分类3")));
     }
     @Test
-    void add_event_have_eventName_and_keyword() throws Exception {
+    void add_event_have_eventName_and_keyword_userName() throws Exception {
         mockMvc.perform(get("/rs/list"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$",hasSize(3)));
 
-        RsEvent rsEvent = new RsEvent("第四条事件", "分类4");
+        RsEvent rsEvent = new RsEvent("第四条事件","分类4",new UserInfo("xiaowang1",22,"male","d@thoughtworks.com","18888888888"));
         ObjectMapper objectMapper = new ObjectMapper();
         String json = objectMapper.writeValueAsString(rsEvent);
         mockMvc.perform(post("/rs/event").content(json).contentType(MediaType.APPLICATION_JSON))
@@ -80,6 +81,40 @@ class RsControllerTest {
                 .andExpect(jsonPath("$[3].eventName",is("第四条事件")))
                 .andExpect(jsonPath("$[3].keyword",is("分类4")));
     }
+
+    @Test
+    void add_event_eventName_should_no_empty() throws Exception {
+        RsEvent rsEvent = new RsEvent("","分类4",new UserInfo("xiaowang1",22,"male","d@thoughtworks.com","18888888888"));
+        ObjectMapper objectMapper = new ObjectMapper();
+        String json = objectMapper.writeValueAsString(rsEvent);
+        mockMvc.perform(post("/rs/event")
+                .content(json)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    void add_event_keyword_should_no_empty() throws Exception {
+        RsEvent rsEvent = new RsEvent("第一条事件","",new UserInfo("xiaowang1",22,"male","d@thoughtworks.com","18888888888"));
+        ObjectMapper objectMapper = new ObjectMapper();
+        String json = objectMapper.writeValueAsString(rsEvent);
+        mockMvc.perform(post("/rs/event")
+                .content(json)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    void add_event_user_should_no_empty() throws Exception {
+        RsEvent rsEvent = new RsEvent("第一条事件","",null);
+        ObjectMapper objectMapper = new ObjectMapper();
+        String json = objectMapper.writeValueAsString(rsEvent);
+        mockMvc.perform(post("/rs/event")
+                .content(json)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest());
+    }
+
 
     @Test
     void del_event_by_index() throws Exception {
