@@ -3,6 +3,7 @@ package com.thoughtworks.rslist.api;
 import com.thoughtworks.rslist.dto.RsEvent;
 import com.thoughtworks.rslist.dto.UserInfo;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.*;
 
@@ -28,18 +29,18 @@ public class RsController {
 
 
     @GetMapping("/rs/list")
-  public List<RsEvent> geAllEvent(@RequestParam(required = false) Integer start,
-                              @RequestParam(required = false) Integer end
+  public ResponseEntity<List<RsEvent>> geAllEvent(@RequestParam(required = false) Integer start,
+                                                 @RequestParam(required = false) Integer end
                             ){
       if (start == null || end == null) {
-        return rsList;
+        return ResponseEntity.ok(rsList);
       }
-      return rsList.subList(start-1,end);
+      return ResponseEntity.ok(rsList.subList(start-1,end));
   }
 
   @GetMapping("/rs/{index}")
-  public RsEvent getOneEvent(@PathVariable int index){
-    return rsList.get(index-1);
+  public ResponseEntity<RsEvent> getOneEvent(@PathVariable int index){
+    return ResponseEntity.ok(rsList.get(index-1));
   }
 
   @PostMapping("/rs/event")
@@ -61,7 +62,7 @@ public class RsController {
   }
 
   @GetMapping("/rss/{index}")
-  public RsEvent updateEvent(@PathVariable int index,
+  public ResponseEntity<RsEvent> updateEvent(@PathVariable int index,
                           @RequestParam(required = false) String eventName,
                           @RequestParam(required = false) String keyword){
 
@@ -77,6 +78,6 @@ public class RsController {
           RsEvent rsEvent = rsList.get(index - 1);
           rsList.set(index-1,new RsEvent(eventName,keyword,rsEvent.getUserInfo()));
       }
-      return rsList.get(index-1);
+      return ResponseEntity.ok(rsList.get(index-1));
   }
 }
