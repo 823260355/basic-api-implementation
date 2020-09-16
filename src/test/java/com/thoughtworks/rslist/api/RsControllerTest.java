@@ -49,13 +49,15 @@ class RsControllerTest {
     @Test
     void get_event_by_start_to_end_range() throws Exception {
         mockMvc.perform(get("/rs/list?start=1&end=3"))
-                .andExpect(status().isOk())
                 .andExpect(jsonPath("$[0].eventName", is("第一条事件")))
                 .andExpect(jsonPath("$[0].keyword", is("分类1")))
                 .andExpect(jsonPath("$[1].eventName", is("第二条事件")))
                 .andExpect(jsonPath("$[1].keyword", is("分类2")))
                 .andExpect(jsonPath("$[2].eventName", is("第三条事件")))
-                .andExpect(jsonPath("$[2].keyword", is("分类3")));
+                .andExpect(jsonPath("$[2].keyword", is("分类3")))
+                .andExpect(status().isOk());
+
+
     }
     @Test
     void add_event_have_eventName_and_keyword_userName() throws Exception {
@@ -147,7 +149,12 @@ class RsControllerTest {
                 .andExpect(jsonPath("$.eventName",is("第三条事件")))
                 .andExpect(jsonPath("$.keyword",is("人气分类3")));
 
+    }
 
+    @Test
+    void get_one_event_index_no_index_out_of_bound() throws Exception {
+        mockMvc.perform(get("/rs/4"))
+                .andExpect(jsonPath("$.error",is("invalid index")));
     }
 
 }

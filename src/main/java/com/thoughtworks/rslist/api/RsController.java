@@ -3,6 +3,7 @@ package com.thoughtworks.rslist.api;
 import com.thoughtworks.rslist.dto.Event;
 import com.thoughtworks.rslist.dto.RsEvent;
 import com.thoughtworks.rslist.dto.UserInfo;
+import com.thoughtworks.rslist.exciptions.CommentError;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -51,8 +52,9 @@ public class RsController {
   @GetMapping("/rs/{index}")
   public ResponseEntity<List<Event>> getOneEvent(@PathVariable int index){
       List<Event> eventList = new ArrayList<>();
-      for (int i = 0; i < rsList.size(); i++) {
-          eventList.set(i,new Event(rsList.get(i).getEventName(),rsList.get(i).getKeyword()));
+      eventList.set(index,new Event(rsList.get(index).getEventName(),rsList.get(index).getKeyword()));
+      if (index >= rsList.size()){
+          throw new IndexOutOfBoundsException();
       }
       return ResponseEntity.ok().body(eventList);
   }
@@ -91,5 +93,12 @@ public class RsController {
           rsList.set(index-1,new RsEvent(eventName,keyword,rsEvent.getUserInfo()));
       }
       return ResponseEntity.ok(rsList.get(index-1));
+  }
+
+  @ExceptionHandler({IndexOutOfBoundsException.class,NullPointerException.class})
+    public ResponseEntity handleIndexOutOfBoundsException(Exception e){
+      CommentError commentError = new CommentError();
+      commentError.setError("invalid index");
+      return ResponseEntity.badRequest().body(commentError);
   }
 }
