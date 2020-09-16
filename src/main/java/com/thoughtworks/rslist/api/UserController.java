@@ -2,9 +2,7 @@ package com.thoughtworks.rslist.api;
 
 import com.thoughtworks.rslist.dto.RsEvent;
 import com.thoughtworks.rslist.dto.UserInfo;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,6 +14,11 @@ public class UserController {
         ArrayList<UserInfo> tempList = new ArrayList<>();
         tempList.add(new UserInfo("xiaowang1",19,"female","a@thoughtworks.com","18888888888"));
         return tempList;
+    }
+
+    @GetMapping("/user/list")
+    public List<UserInfo> geAllUser(){
+        return  userList;
     }
 
     @PostMapping("/user/register")
