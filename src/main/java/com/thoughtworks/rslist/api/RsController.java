@@ -49,7 +49,7 @@ public class RsController {
             eventList.add(i,new Event(rsList.get(i).getEventName(),rsList.get(i).getKeyword()));
         }
         if (start < 1 || start > rsList.size() || end > rsList.size() || start > end) {
-            throw new MyException("invalid request param");
+            throw new MyException();
         }
       return ResponseEntity.ok(eventList.subList(start-1,end));
   }
@@ -101,7 +101,7 @@ public class RsController {
           rsList.set(index-1,new RsEvent(eventName,keyword,rsEvent.getUserInfo()));
       }
       if (index < 1 || index > rsList.size()) {
-          throw new MyException("invalid index");
+          throw new MyException();
       }
       return ResponseEntity.ok(rsList.get(index-1));
   }
@@ -113,6 +113,7 @@ public class RsController {
           commentError.setError("invalid param");
           return ResponseEntity.badRequest().body(commentError);
       }
+
 
       CommentError commentError = new CommentError();
       commentError.setError("invalid index");
