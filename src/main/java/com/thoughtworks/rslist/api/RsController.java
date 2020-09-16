@@ -1,5 +1,6 @@
 package com.thoughtworks.rslist.api;
 
+import com.thoughtworks.rslist.dto.Event;
 import com.thoughtworks.rslist.dto.RsEvent;
 import com.thoughtworks.rslist.dto.UserInfo;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,18 +30,31 @@ public class RsController {
 
 
     @GetMapping("/rs/list")
-  public ResponseEntity<List<RsEvent>> geAllEvent(@RequestParam(required = false) Integer start,
+  public ResponseEntity<List<Event>> geAllEvent(@RequestParam(required = false) Integer start,
                                                  @RequestParam(required = false) Integer end
                             ){
+        List<Event> eventList = new ArrayList<>();
+        List<Event> eventList1 = new ArrayList<>();
+
       if (start == null || end == null) {
-        return ResponseEntity.ok(rsList);
+          for (int i = 0; i < rsList.size(); i++) {
+              eventList1.add(i,new Event(rsList.get(i).getEventName(),rsList.get(i).getKeyword()));
+          }
+          return ResponseEntity.ok(eventList1);
       }
-      return ResponseEntity.ok(rsList.subList(start-1,end));
+        for (int i = start-1; i < end; i++) {
+            eventList.add(i,new Event(rsList.get(i).getEventName(),rsList.get(i).getKeyword()));
+        }
+      return ResponseEntity.ok(eventList.subList(start-1,end));
   }
 
   @GetMapping("/rs/{index}")
-  public ResponseEntity<RsEvent> getOneEvent(@PathVariable int index){
-    return ResponseEntity.ok(rsList.get(index-1));
+  public ResponseEntity<List<Event>> getOneEvent(@PathVariable int index){
+      List<Event> eventList = new ArrayList<>();
+      for (int i = 0; i < rsList.size(); i++) {
+          eventList.set(i,new Event(rsList.get(i).getEventName(),rsList.get(i).getKeyword()));
+      }
+      return ResponseEntity.ok().body(eventList);
   }
 
   @PostMapping("/rs/event")
