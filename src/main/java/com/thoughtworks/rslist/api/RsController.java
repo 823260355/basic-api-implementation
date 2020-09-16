@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -42,7 +43,7 @@ public class RsController {
   }
 
   @PostMapping("/rs/event")
-  public void addEventHaveEventNameAndKeyword(@RequestBody RsEvent rsEvent){
+  public void addEventHaveEventNameAndKeyword(@Valid @RequestBody RsEvent rsEvent){
       for (int i = 0; i < rsList.size(); i++) {
           if (rsEvent.getUserInfo().getUserName().equals(rsList.get(i).getUserInfo().getUserName())){
               rsList.add(rsEvent);
