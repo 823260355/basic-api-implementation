@@ -93,6 +93,16 @@ class RsControllerTest {
                 .andExpect(status().isBadRequest());
     }
 
+    @Test
+    void add_event_keyword_should_no_empty() throws Exception {
+        RsEvent rsEvent = new RsEvent("第一条事件","",new UserInfo("xiaowang1",22,"male","d@thoughtworks.com","18888888888"));
+        ObjectMapper objectMapper = new ObjectMapper();
+        String json = objectMapper.writeValueAsString(rsEvent);
+        mockMvc.perform(post("/rs/event")
+                .content(json)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest());
+    }
 
 
 
