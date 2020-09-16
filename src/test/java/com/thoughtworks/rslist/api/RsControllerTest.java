@@ -92,7 +92,8 @@ class RsControllerTest {
         mockMvc.perform(post("/rs/event")
                 .content(json)
                 .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isBadRequest());
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.error",is("invalid param")));
     }
 
     @Test
@@ -154,7 +155,17 @@ class RsControllerTest {
     @Test
     void get_one_event_index_no_index_out_of_bound() throws Exception {
         mockMvc.perform(get("/rs/4"))
+                .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.error",is("invalid index")));
     }
+
+    @Test
+    public void should_throw_rs_list_not_valid_param() throws Exception {
+        mockMvc.perform(get("/rs/list?start=1&end=4"))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.error",is("invalid request param")));
+    }
+
+
 
 }

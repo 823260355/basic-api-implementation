@@ -4,9 +4,11 @@ import com.thoughtworks.rslist.dto.Event;
 import com.thoughtworks.rslist.dto.RsEvent;
 import com.thoughtworks.rslist.dto.UserInfo;
 import com.thoughtworks.rslist.exciptions.CommentError;
+import com.thoughtworks.rslist.exciptions.MyException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -46,6 +48,9 @@ public class RsController {
         for (int i = start-1; i < end; i++) {
             eventList.add(i,new Event(rsList.get(i).getEventName(),rsList.get(i).getKeyword()));
         }
+        if (start < 1 || start > rsList.size() || end > rsList.size() || start > end) {
+            throw new MyException("invalid request param");
+        }
       return ResponseEntity.ok(eventList.subList(start-1,end));
   }
 
@@ -72,6 +77,9 @@ public class RsController {
 
   @DeleteMapping("/rs/{index}")
   public void delEvent(@PathVariable int index){
+      if (index < 1 || index > rsList.size()) {
+          throw new MyException("invalid index");
+      }
       rsList.remove(index-1);
   }
 
@@ -92,11 +100,20 @@ public class RsController {
           RsEvent rsEvent = rsList.get(index - 1);
           rsList.set(index-1,new RsEvent(eventName,keyword,rsEvent.getUserInfo()));
       }
+      if (index < 1 || index > rsList.size()) {
+          throw new MyException("invalid index");
+      }
       return ResponseEntity.ok(rsList.get(index-1));
   }
 
-  @ExceptionHandler({IndexOutOfBoundsException.class,NullPointerException.class})
-    public ResponseEntity handleIndexOutOfBoundsException(Exception e){
+  @ExceptionHandler({IndexOutOfBoundsException.class,NullPointerException.class,MyException.class, MethodArgumentNotValidException.class})
+    public ResponseEntity<CommentError> handleIndexOutOfBoundsException(Exception e){
+      if (e instanceof MethodArgumentNotValidException){
+          CommentError commentError =new CommentError();
+          commentError.setError("invalid param");
+          return ResponseEntity.badRequest().body(commentError);
+      }
+
       CommentError commentError = new CommentError();
       commentError.setError("invalid index");
       return ResponseEntity.badRequest().body(commentError);
