@@ -40,4 +40,15 @@ class UserControllerTest {
                 .andExpect(jsonPath("$",hasSize(2)));
     }
 
+    @Test
+    void register_user_userName_no_empty() throws Exception {
+
+        UserInfo userInfo = new UserInfo("", 19, "female", "a@thoughtworks.com", "18888888888");
+        ObjectMapper objectMapper = new ObjectMapper();
+        String json = objectMapper.writeValueAsString(userInfo);
+        mockMvc.perform(post("/user/register").content(json).contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest());
+
+    }
+
 }

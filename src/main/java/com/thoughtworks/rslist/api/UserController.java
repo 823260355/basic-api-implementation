@@ -4,6 +4,7 @@ import com.thoughtworks.rslist.dto.RsEvent;
 import com.thoughtworks.rslist.dto.UserInfo;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -22,7 +23,7 @@ public class UserController {
     }
 
     @PostMapping("/user/register")
-    public void register(@RequestBody UserInfo userInfo){
+    public void register(@Valid @RequestBody UserInfo userInfo){
           userList.add(userInfo);
     }
 
