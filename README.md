@@ -17,7 +17,8 @@
   }
   ``` 
   
-* 如果userName已存在在user列表中的话则只需添加热搜事件到热搜事件列表，如果userName不存在，则将User添加到热搜事件列表中（相当于注册用户）
+* 如果userName已存在在user列表中的话则只需添加热搜事件到热搜事件列表，如果userName不存在，
+则将User添加到热搜事件列表中（相当于注册用户）
 * 需要对请求进行校验：其中user keyword eventName都不能为空, user的校验规则：
     ```
   名称(不超过8位字符，不能为空)
@@ -32,13 +33,7 @@
 notice: 注意@Valid和@Validated的配合使用
 
 
-
-  
-
-
-
-
-<<<<<<< HEAD
+###routing and data-bin
 根据课堂上的demo，完成下面需求
 1. 提供获取某一条热搜事件的接口
 2. 提供能够根据起始参数，获取对应范围内的热搜事件列表的接口
@@ -56,7 +51,7 @@ notice: 注意@Valid和@Validated的配合使用
 
 
 <span style="color: red"> 注意：所有的需求都请先写测试再写实现 </span> 
-=======
 
->>>>>>> routing
+
+
 
