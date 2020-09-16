@@ -24,6 +24,13 @@ class UserControllerTest {
     MockMvc mockMvc;
 
     @Test
+    void return_all_user() throws Exception {
+        mockMvc.perform(get("/user/list"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$",hasSize(1)));
+    }
+
+    @Test
     void add_user_when_info_is_complete() throws Exception {
         mockMvc.perform(get("/user/list"))
                 .andExpect(status().isOk())

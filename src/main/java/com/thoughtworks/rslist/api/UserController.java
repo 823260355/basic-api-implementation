@@ -20,7 +20,7 @@ public class UserController {
 
     @GetMapping("/user/list")
     public ResponseEntity<List<UserInfo>> geAllUser(){
-        return  ResponseEntity.ok(userList);
+        return  ResponseEntity.ok().body(userList);
     }
 
     @PostMapping("/user/register")
