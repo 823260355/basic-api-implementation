@@ -83,21 +83,17 @@ public class RsController {
 //  }
   @PostMapping("/rs/event")
   public ResponseEntity addEventHaveEventNameAndKeyword(@Valid @RequestBody RsEvent rsEvent){
-      for (int i = 0; i < userRepository.findAll().size(); i++) {
-          if (rsEvent.getUserId() == userRepository.findAll().get(i).getId()){
-              RsEventEntity entity = RsEventEntity.builder()
+      if (!userRepository.existsById(rsEvent.getUserId())){
+          return ResponseEntity.status(400).build();
+      }
+      RsEventEntity entity = RsEventEntity.builder()
                       .eventName(rsEvent.getEventName())
                       .keyword(rsEvent.getKeyword())
                       .userId(rsEvent.getUserId())
                       .build();
-              rsEventRepository.save(entity);
-              System.out.println("***************************");
-              return ResponseEntity.created(null).build();
+      rsEventRepository.save(entity);
+      return ResponseEntity.created(null).build();
 
-          }
-      }
-
-      return ResponseEntity.status(400).build();
   }
 
 //

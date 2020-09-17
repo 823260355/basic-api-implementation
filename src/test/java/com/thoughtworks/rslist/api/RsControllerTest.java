@@ -68,6 +68,9 @@ class RsControllerTest {
                 .content(jsonValue)
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().is(400));
+
+        List<RsEventEntity> rsEvents = rsEventRepository.findAll();
+        assertEquals(0,rsEvents.size());
     }
 //    @Test
 //    void check_re_list() throws Exception {
