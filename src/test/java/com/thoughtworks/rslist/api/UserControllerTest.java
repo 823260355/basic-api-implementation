@@ -18,8 +18,7 @@ import java.util.List;
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
 import static org.junit.jupiter.api.Assertions.*;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -204,6 +203,26 @@ class UserControllerTest {
         mockMvc.perform(get("/user/{id}",user.getId()))
                          .andExpect(status().isOk())
                         .andExpect(jsonPath("$.userName", is("liming1")));
+    }
+
+    @Test
+    void should_delete_user_by_id() throws Exception {
+        UserEntity user=UserEntity.builder()
+                .userName("liming1")
+                .gender("male")
+                .voteNum(10)
+                .phone("15991047255")
+                .age(20)
+                .email("a@thoughtworks.com")
+                .build();
+        userRepository.save(user);
+
+        mockMvc.perform(delete("/user/{id}",user.getId()))
+                .andExpect(status().isNoContent());
+
+        List<UserEntity> users = userRepository.findAll();
+        assertEquals(0,users.size());
+
     }
 
 }

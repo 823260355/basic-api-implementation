@@ -5,6 +5,7 @@ import com.thoughtworks.rslist.dto.UserInfo;
 import com.thoughtworks.rslist.entity.UserEntity;
 import com.thoughtworks.rslist.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -44,9 +45,14 @@ public class UserController {
     }
 
     @GetMapping("/user/{id}")
-    public ResponseEntity geUserById(@PathVariable Integer id){
+    public ResponseEntity getUserById(@PathVariable Integer id){
         Optional<UserEntity> user = userRepository.findById(id);
         return  ResponseEntity.ok().body(user);
     }
 
+    @ResponseStatus(code = HttpStatus.NO_CONTENT)
+    @DeleteMapping("/user/{id}")
+    public void deleteUserById(@PathVariable Integer id){
+        userRepository.deleteById(id);
+    }
 }
