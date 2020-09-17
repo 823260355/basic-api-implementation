@@ -72,6 +72,37 @@ class RsControllerTest {
         List<RsEventEntity> rsEvents = rsEventRepository.findAll();
         assertEquals(0,rsEvents.size());
     }
+
+    @Test
+    void should_update_rsEvent_when_user_and_eventName_and_keyword_exists() throws Exception {
+        UserEntity user=UserEntity.builder()
+                .userName("liming1")
+                .gender("male")
+                .voteNum(10)
+                .phone("15991047255")
+                .age(20)
+                .email("a@thoughtworks.com")
+                .build();
+        userRepository.save(user);
+
+        RsEventEntity rsEvent = RsEventEntity.builder()
+                .eventName("事件1")
+                .keyword("分类1")
+                .userId(user.getId())
+                .build();
+        rsEventRepository.save(rsEvent);
+
+        String jsonValue="{\"eventName\":\"热搜事件1\",\"keyword\":\"热搜分类1\",\"userId\":"+user.getId()+"}";
+        mockMvc.perform(post("/rs/{rsEventId}",rsEvent.getId())
+                .content(jsonValue)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isCreated());
+
+        List<RsEventEntity> rsEvents = rsEventRepository.findAll();
+        assertEquals(1,rsEvents.size());
+        assertEquals("热搜事件1",rsEvents.get(0).getEventName());
+        assertEquals("热搜分类1",rsEvents.get(0).getKeyword());
+    }
 //    @Test
 //    void check_re_list() throws Exception {
 //        mockMvc.perform(get("/rs/list"))

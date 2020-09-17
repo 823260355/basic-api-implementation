@@ -10,4 +10,8 @@ public interface RsEventRepository extends CrudRepository<RsEventEntity,Integer>
     List<RsEventEntity> findAll();
     @Transactional
     void deleteAllByUserId(int userId);
+
+    boolean existsByEventName(String eventName);
+    boolean existsByKeyword(String keyword);
+
 }

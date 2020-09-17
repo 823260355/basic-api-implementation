@@ -18,6 +18,7 @@ import javax.validation.Valid;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 public class RsController {
@@ -95,7 +96,29 @@ public class RsController {
       return ResponseEntity.created(null).build();
 
   }
+    @PostMapping("/rs/{rsEventId}")
+    public ResponseEntity addEventHaveEventNameAndKeyword(@Valid @RequestBody RsEvent rsEvent,@PathVariable Integer rsEventId){
+        if (!userRepository.existsById(rsEvent.getUserId())){
+            return ResponseEntity.status(400).build();
+        }
+        if (rsEventRepository.existsByEventName(rsEvent.getEventName()) && rsEventRepository.existsByKeyword(rsEvent.getKeyword())){
+            RsEventEntity entity = RsEventEntity.builder()
+                .eventName(rsEvent.getEventName())
+                .keyword(rsEvent.getKeyword())
+                .userId(rsEvent.getUserId())
+                .build();
+        rsEventRepository.save(entity);
+        return ResponseEntity.created(null).build();
+        }
+//        RsEventEntity entity = RsEventEntity.builder()
+//                .eventName(rsEvent.getEventName())
+//                .keyword(rsEvent.getKeyword())
+//                .userId(rsEvent.getUserId())
+//                .build();
+//        rsEventRepository.save(entity);
+        return ResponseEntity.created(null).build();
 
+    }
 //
 //  @DeleteMapping("/rs/{index}")
 //  public void delEvent(@PathVariable int index){
