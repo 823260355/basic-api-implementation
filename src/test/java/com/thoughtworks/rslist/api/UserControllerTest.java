@@ -187,8 +187,23 @@ class UserControllerTest {
         List<UserEntity> users = userRepository.findAll();
         assertEquals(1,users.size());
         assertEquals("xiaomin",users.get(0).getUserName());
+    }
 
+    @Test
+    void should_return_all_user_in_mysql() throws Exception {
+        UserEntity user=UserEntity.builder()
+                .userName("liming1")
+                .gender("male")
+                .voteNum(10)
+                .phone("15991047255")
+                .age(20)
+                .email("a@thoughtworks.com")
+                .build();
+        userRepository.save(user);
 
+        mockMvc.perform(get("/user/{id}",user.getId()))
+                         .andExpect(status().isOk())
+                        .andExpect(jsonPath("$.userName", is("liming1")));
     }
 
 }
