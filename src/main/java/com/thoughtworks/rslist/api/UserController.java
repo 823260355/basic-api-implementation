@@ -55,10 +55,8 @@ public class UserController {
     }
 
     @ResponseStatus(code = HttpStatus.NO_CONTENT)
-    @Transactional
     @DeleteMapping("/user/{id}")
     public void deleteUserById(@PathVariable Integer id){
         userRepository.deleteById(id);
-        rsEventRepository.deleteAllByUserId(id);
     }
 }
