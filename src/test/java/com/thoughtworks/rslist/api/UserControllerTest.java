@@ -3,7 +3,9 @@ package com.thoughtworks.rslist.api;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.thoughtworks.rslist.dto.RsEvent;
 import com.thoughtworks.rslist.dto.UserInfo;
+import com.thoughtworks.rslist.entity.RsEventEntity;
 import com.thoughtworks.rslist.entity.UserEntity;
+import com.thoughtworks.rslist.repository.RsEventRepository;
 import com.thoughtworks.rslist.repository.UserRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -30,6 +32,8 @@ class UserControllerTest {
     MockMvc mockMvc;
     @Autowired
     UserRepository userRepository;
+    @Autowired
+    RsEventRepository rsEventRepository;
 
     @BeforeEach
     void setUp(){
@@ -222,7 +226,36 @@ class UserControllerTest {
 
         List<UserEntity> users = userRepository.findAll();
         assertEquals(0,users.size());
-
     }
+
+    @Test
+    void should_delete_user_by_id_and_delete_rsEvent() throws Exception {
+        UserEntity user=UserEntity.builder()
+                .userName("liming1")
+                .gender("male")
+                .voteNum(10)
+                .phone("15991047255")
+                .age(20)
+                .email("a@thoughtworks.com")
+                .build();
+        userRepository.save(user);
+
+        RsEventEntity rsEvent = RsEventEntity.builder()
+                .eventName("事件1")
+                .keyword("分类1")
+                .userId(user.getId())
+                .build();
+        rsEventRepository.save(rsEvent);
+
+        mockMvc.perform(delete("/user/{id}",user.getId()))
+                .andExpect(status().isNoContent());
+
+        List<UserEntity> users = userRepository.findAll();
+        List<RsEventEntity> rsEvents = rsEventRepository.findAll();
+        assertEquals(0,users.size());
+        assertEquals(0,rsEvents.size());
+    }
+
+
 
 }
