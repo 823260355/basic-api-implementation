@@ -1,8 +1,7 @@
 package com.thoughtworks.rslist.api;
 
-import com.thoughtworks.rslist.dto.Event;
+
 import com.thoughtworks.rslist.dto.RsEvent;
-import com.thoughtworks.rslist.dto.UserInfo;
 import com.thoughtworks.rslist.entity.RsEventEntity;
 import com.thoughtworks.rslist.exciptions.CommentError;
 import com.thoughtworks.rslist.exciptions.MyException;
@@ -10,15 +9,11 @@ import com.thoughtworks.rslist.repository.RsEventRepository;
 import com.thoughtworks.rslist.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Service;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
+
 
 @RestController
 public class RsController {
