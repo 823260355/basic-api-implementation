@@ -16,6 +16,6 @@ public class RsEvent {
     @NotEmpty
     private String keyword;
     @NotNull
-    private UserInfo userInfo;
+    private int userId;
 
 }
