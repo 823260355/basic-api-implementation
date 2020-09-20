@@ -1,13 +1,12 @@
 package com.thoughtworks.rslist.entity;
 
+import com.thoughtworks.rslist.dto.UserDto;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.hibernate.engine.internal.Cascade;
 
 import javax.persistence.*;
-import javax.validation.constraints.*;
 import java.util.List;
 
 @Entity
@@ -17,16 +16,27 @@ import java.util.List;
 @AllArgsConstructor
 @Builder
 public class UserEntity {
+
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
-    @Column(name = "name")
-    private String userName;
+
+    private String name;
     private String gender;
     private Integer age;
     private String email;
     private String phone;
-    private int voteNum;
-    @OneToMany(mappedBy = "userId",cascade = CascadeType.REMOVE)
-    private List<RsEventEntity> rsEvents;
+    private Integer vote;
+
+    @OneToMany(mappedBy = "userId", cascade = CascadeType.REMOVE)
+    List<EventEntity> eventEntities;
+
+    public void setByUserDto(UserDto userDto) {
+        if (userDto.getVote() != null) this.vote = userDto.getVote();
+        if (userDto.getName() != null) this.name = userDto.getName();
+        if (userDto.getAge() != null) this.age = userDto.getAge();
+        if (userDto.getEmail() != null) this.email = userDto.getEmail();
+        if (userDto.getGender() != null) this.gender = userDto.getGender();
+        if (userDto.getPhone() != null) this.phone = userDto.getPhone();
+    }
 }

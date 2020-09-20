@@ -1,155 +1,82 @@
 package com.thoughtworks.rslist.api;
 
 
-import com.thoughtworks.rslist.dto.RsEvent;
-import com.thoughtworks.rslist.entity.RsEventEntity;
-import com.thoughtworks.rslist.repository.RsEventRepository;
-import com.thoughtworks.rslist.repository.UserRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.thoughtworks.rslist.dto.Event;
+import com.thoughtworks.rslist.dto.VoteDto;
+import com.thoughtworks.rslist.exceptions.CommonException;
+import com.thoughtworks.rslist.exceptions.InvalidParamException;
+import com.thoughtworks.rslist.exceptions.InvalidRequestParamException;
+import com.thoughtworks.rslist.service.EventService;
+import com.thoughtworks.rslist.service.UserService;
+import com.thoughtworks.rslist.service.VoteService;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+import javax.annotation.Resource;
 import javax.validation.Valid;
-
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @RestController
 public class RsController {
-    @Autowired
-    UserRepository userRepository;
-    @Autowired
-    RsEventRepository rsEventRepository;
 
-//    private List<RsEvent> rsList = initRsList();
-//
-//  private List<RsEvent> initRsList(){
-//
-//      ArrayList<RsEvent> tempList = new ArrayList<>();
-//      tempList.add(new RsEvent("第一条事件","分类1",new UserInfo("xiaowang1",19,"female","a@thoughtworks.com","18888888888")));
-//      tempList.add(new RsEvent("第二条事件","分类2",new UserInfo("xiaowang2",20,"male","b@thoughtworks.com","18888888888")));
-//      tempList.add(new RsEvent("第三条事件","分类3",new UserInfo("xiaowang3",21,"female","c@thoughtworks.com","18888888888")));
-//      return tempList;
-//  }
-//
-//
-//
-//    @GetMapping("/rs/list")
-//  public ResponseEntity<List<Event>> geAllEvent(@RequestParam(required = false) Integer start,
-//                                                 @RequestParam(required = false) Integer end
-//                            ){
-//        List<Event> eventList = new ArrayList<>();
-//        List<Event> eventList1 = new ArrayList<>();
-//
-//      if (start == null || end == null) {
-//          for (int i = 0; i < rsList.size(); i++) {
-//              eventList1.add(i,new Event(rsList.get(i).getEventName(),rsList.get(i).getKeyword()));
-//          }
-//          return ResponseEntity.ok(eventList1);
-//      }
-//        for (int i = start-1; i < end; i++) {
-//            eventList.add(i,new Event(rsList.get(i).getEventName(),rsList.get(i).getKeyword()));
-//        }
-//        if (start < 1 || start > rsList.size() || end > rsList.size() || start > end) {
-//            throw new MyException();
-//        }
-//      return ResponseEntity.ok(eventList.subList(start-1,end));
-//  }
-//
-//  @GetMapping("/rs/{index}")
-//  public ResponseEntity<List<Event>> getOneEvent(@PathVariable int index){
-//      List<Event> eventList = new ArrayList<>();
-//      eventList.set(index,new Event(rsList.get(index).getEventName(),rsList.get(index).getKeyword()));
-//      if (index >= rsList.size()){
-//          throw new IndexOutOfBoundsException();
-//      }
-//      return ResponseEntity.ok().body(eventList);
-//  }
+    @Resource
+    UserService userService;
 
-//  @PostMapping("/rs/event")
-//  public ResponseEntity addEventHaveEventNameAndKeyword(@Valid @RequestBody RsEvent rsEvent){
-//      for (int i = 0; i < rsList.size(); i++) {
-//          if (rsEvent.getUserInfo().getUserName().equals(rsList.get(i).getUserInfo().getUserName())){
-//              rsList.add(rsEvent);
-//              return ResponseEntity.status(201).body(i);
-//          }
-//      }
-//      return ResponseEntity.badRequest().build();
-//  }
-  @PostMapping("/rs/event")
-  public ResponseEntity addEventHaveEventNameAndKeyword(@Valid @RequestBody RsEvent rsEvent){
-      if (!userRepository.existsById(rsEvent.getUserId())){
-          return ResponseEntity.status(400).build();
-      }
-      RsEventEntity entity = RsEventEntity.builder()
-                      .eventName(rsEvent.getEventName())
-                      .keyword(rsEvent.getKeyword())
-                      .userId(rsEvent.getUserId())
-                      .build();
-      rsEventRepository.save(entity);
-      return ResponseEntity.created(null).build();
+    @Resource
+    EventService eventService;
 
-  }
-    @PostMapping("/rs/{rsEventId}")
-    public ResponseEntity updateRsEvent(@Valid @RequestBody RsEvent rsEvent,@PathVariable Integer rsEventId){
-        if (!userRepository.existsById(rsEvent.getUserId())){
-            return ResponseEntity.status(400).build();
-        }
-        if (rsEvent.getEventName() != null && rsEvent.getKeyword() != null){
-            RsEventEntity entity = RsEventEntity.builder()
-                    .id(rsEventId)
-                   .eventName(rsEvent.getEventName())
-                   .keyword(rsEvent.getKeyword())
-                   .userId(rsEvent.getUserId())
-                   .build();
-        rsEventRepository.save(entity);
-        return ResponseEntity.created(null).build();
-        }
-        return ResponseEntity.created(null).build();
+    @Resource
+    VoteService voteService;
 
+    @GetMapping("/rs/event/{id}")
+    public ResponseEntity getOneEvent(@PathVariable int id) throws CommonException {
+        Event event = eventService.getEventById(id);
+        return ResponseEntity.status(HttpStatus.OK).body(event);
     }
-//
-//  @DeleteMapping("/rs/{index}")
-//  public void delEvent(@PathVariable int index){
-//      if (index < 1 || index > rsList.size()) {
-//          throw new MyException("invalid index");
-//      }
-//      rsList.remove(index-1);
-//  }
-//
-//  @GetMapping("/rss/{index}")
-//  public ResponseEntity<RsEvent> updateEvent(@PathVariable int index,
-//                          @RequestParam(required = false) String eventName,
-//                          @RequestParam(required = false) String keyword){
-//
-//      if (eventName !=null && keyword ==null){
-//          RsEvent rsEvent = rsList.get(index - 1);
-//          rsList.set(index-1,new RsEvent(eventName,rsEvent.getKeyword(),rsEvent.getUserInfo()));
-//      }
-//      if (eventName ==null && keyword !=null){
-//          RsEvent rsEvent = rsList.get(index - 1);
-//          rsList.set(index-1,new RsEvent(rsEvent.getEventName(),keyword,rsEvent.getUserInfo()));
-//      }
-//      if (eventName !=null && keyword != null){
-//          RsEvent rsEvent = rsList.get(index - 1);
-//          rsList.set(index-1,new RsEvent(eventName,keyword,rsEvent.getUserInfo()));
-//      }
-//      if (index < 1 || index > rsList.size()) {
-//          throw new MyException();
-//      }
-//      return ResponseEntity.ok(rsList.get(index-1));
-//  }
 
-//  @ExceptionHandler({IndexOutOfBoundsException.class,NullPointerException.class,MyException.class, MethodArgumentNotValidException.class})
-//    public ResponseEntity<CommentError> handleIndexOutOfBoundsException(Exception e){
-//      if (e instanceof MethodArgumentNotValidException){
-//          CommentError commentError =new CommentError();
-//          commentError.setError("invalid param");
-//          return ResponseEntity.badRequest().body(commentError);
-//      }
-//
-//
-//      CommentError commentError = new CommentError();
-//      commentError.setError("invalid index");
-//      return ResponseEntity.badRequest().body(commentError);
-//  }
+    @GetMapping("/rs/event")
+    public ResponseEntity getRangeEvents(@RequestParam(required = false, defaultValue = "1") Integer start,
+                                         @RequestParam(required = false, defaultValue = "-1") Integer end) throws InvalidRequestParamException {
+        List<Event> events = eventService.getEvents();
+        if (start < 0 || end > events.size()) throw new InvalidRequestParamException("invalid request param");
+        return ResponseEntity.created(null).body(events.subList(start - 1, end));
+    }
+
+    @GetMapping("/rs/event/list_all")
+    public ResponseEntity getAllEvent() {
+        List<Event> events = eventService.getEvents();
+        return ResponseEntity.status(HttpStatus.OK).body(events);
+    }
+
+    @PostMapping("/rs/event")
+    public ResponseEntity addOneEvent(@Valid @RequestBody Event event, BindingResult re) throws CommonException {
+        if (re.getAllErrors().size() != 0) throw new InvalidParamException("invalid param");
+        userService.getOneUser(event.getUserId());
+        eventService.addOneEvent(event);
+        return ResponseEntity.status(HttpStatus.CREATED).build();
+    }
+
+    @PatchMapping("/rs/{rsEventId}")
+    public ResponseEntity editOneEvent(@PathVariable("rsEventId") int rsEventId, @RequestBody Event event) throws CommonException {
+        eventService.updateEvent(rsEventId, event);
+        return ResponseEntity.status(HttpStatus.OK).build();
+    }
+
+    @DeleteMapping("/rs/event/{id}")
+    public ResponseEntity deleteOneEvent(@PathVariable("id") int id) {
+        List<Event> events = eventService.getEvents();
+        eventService.deleteEventById(id);
+        return ResponseEntity.status(HttpStatus.OK).build();
+    }
+
+    @PostMapping("/rs/vote/{rsEventId}")
+    public ResponseEntity vote(@PathVariable int rsEventId, @RequestBody VoteDto voteDto) throws CommonException {
+        voteDto.setRsEventId(rsEventId);
+        voteService.vote(voteDto);
+        return ResponseEntity.status(HttpStatus.CREATED).build();
+    }
 }
