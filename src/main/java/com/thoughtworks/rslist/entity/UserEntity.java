@@ -28,15 +28,10 @@ public class UserEntity {
     private String phone;
     private Integer vote;
 
-    @OneToMany(mappedBy = "userId", cascade = CascadeType.REMOVE)
-    List<EventEntity> eventEntities;
+    @OneToMany(mappedBy = "user",cascade = CascadeType.REMOVE)
+    private List<EventEntity> rsEvents;
+    @OneToMany(mappedBy = "user",cascade = CascadeType.REMOVE)
+    private List<VoteEntity> voteEntities;
 
-    public void setByUserDto(UserDto userDto) {
-        if (userDto.getVote() != null) this.vote = userDto.getVote();
-        if (userDto.getName() != null) this.name = userDto.getName();
-        if (userDto.getAge() != null) this.age = userDto.getAge();
-        if (userDto.getEmail() != null) this.email = userDto.getEmail();
-        if (userDto.getGender() != null) this.gender = userDto.getGender();
-        if (userDto.getPhone() != null) this.phone = userDto.getPhone();
-    }
+
 }

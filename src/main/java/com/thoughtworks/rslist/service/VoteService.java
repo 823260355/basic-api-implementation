@@ -32,15 +32,15 @@ public class VoteService {
 
     private VoteEntity voteDtoToVoteEntity(VoteDto voteDto) {
         return VoteEntity.builder()
-                .eventId(voteDto.getRsEventId())
-                .userId(voteDto.getUserId())
+//                .user()
+//                .userId(voteDto.getUserId())
                 .voteNum(voteDto.getVoteNum())
                 .voteTime(voteDto.getVoteTime())
                 .build();
     }
 
     private VoteDto voteEntityToVoteDto(VoteEntity voteEntity) {
-        return new VoteDto(voteEntity.getUserId(), voteEntity.getEventId(), voteEntity.getVoteNum(), voteEntity.getVoteTime());
+        return new VoteDto(voteEntity.getId(), voteEntity.getId(), voteEntity.getVoteNum(), voteEntity.getVoteTime());
     }
 
     @Transactional(rollbackOn = Exception.class)
@@ -60,12 +60,12 @@ public class VoteService {
 
 
 
-    public List<VoteDto> getVotesByUserIdAndEventId(Integer userId, Integer eventId, Pageable pageable) {
-        List<VoteEntity> voteEntities = voteRepository.findAllByUserIdAndEventId(userId, eventId, pageable);
-        List<VoteDto> voteDtos = new ArrayList<>();
-        voteEntities.forEach(voteEntity -> voteDtos.add(voteEntityToVoteDto(voteEntity)));
-        return voteDtos;
-    }
+//    public  List<VoteDto> getVotesByUserIdAndEventId(Integer userId, Integer eventId) {
+////        List<VoteEntity> voteEntities = voteRepository.findAllByUserIdAndEventId(userId, eventId);
+////        List<VoteDto> voteDtos = new ArrayList<>();
+////        voteEntities.forEach(voteEntity -> voteDtos.add(voteEntityToVoteDto(voteEntity)));
+////        return voteDtos;
+//    }
 
     public List<VoteDto> getVotesByStartAndEnd(LocalDateTime start, LocalDateTime end, Pageable pageable) {
         List<VoteEntity> voteEntities = voteRepository.findAllByVoteTimeBetween(start, end, pageable);

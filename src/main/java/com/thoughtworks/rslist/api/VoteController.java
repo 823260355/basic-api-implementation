@@ -2,7 +2,11 @@ package com.thoughtworks.rslist.api;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.thoughtworks.rslist.dto.VoteDto;
+import com.thoughtworks.rslist.entity.VoteEntity;
 import com.thoughtworks.rslist.exceptions.CommonException;
+import com.thoughtworks.rslist.repository.EventRepository;
+import com.thoughtworks.rslist.repository.UserRepository;
+import com.thoughtworks.rslist.repository.VoteRepository;
 import com.thoughtworks.rslist.service.VoteService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
@@ -22,6 +26,15 @@ public class VoteController {
     @Autowired
     VoteService voteService;
 
+    @Autowired
+    UserRepository userRepository;
+    @Autowired
+    EventRepository eventRepository;
+    @Autowired
+    VoteRepository voteRepository;
+
+
+
     @PostMapping("/rs/vote/{rsEventId}")
     public ResponseEntity vote(@PathVariable int rsEventId, @RequestBody VoteDto voteDto) throws CommonException {
         voteDto.setRsEventId(rsEventId);
@@ -29,7 +42,7 @@ public class VoteController {
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
-    @GetMapping("/vote")
+    @GetMapping("/vote/time")
     public ResponseEntity getVotesByStartAndEnd(
             @RequestParam(name = "start") String start,
             @RequestParam(name = "end") String end,
@@ -41,5 +54,10 @@ public class VoteController {
         return ResponseEntity.status(HttpStatus.OK).body(voteDtos);
     }
 
+//    @GetMapping("/vote")
+//    public ResponseEntity<List<VoteDto>> getVotes(@RequestParam int userId,@RequestParam int rsEventId){
+//        List<VoteDto> votes= VoteService.getVotesByUserIdAndEventId(userId, rsEventId);
+//        return ResponseEntity.ok(votes);
+//    }
 
 }

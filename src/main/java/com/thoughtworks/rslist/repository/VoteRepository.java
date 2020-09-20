@@ -9,7 +9,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 public interface VoteRepository extends CrudRepository<VoteEntity, Integer> {
-    List<VoteEntity> findAllByUserIdAndEventId(Integer userId, Integer eventId, Pageable pageable);
+    List<VoteEntity> findAllByUserIdAndEventId(Integer userId, Integer eventId);
 
     List<VoteEntity> findAllByVoteTimeBetween(LocalDateTime start, LocalDateTime end, Pageable pageable);
 }

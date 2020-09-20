@@ -2,6 +2,7 @@ package com.thoughtworks.rslist.service;
 
 import com.thoughtworks.rslist.dto.Event;
 import com.thoughtworks.rslist.entity.EventEntity;
+import com.thoughtworks.rslist.entity.UserEntity;
 import com.thoughtworks.rslist.exceptions.CommonException;
 import com.thoughtworks.rslist.repository.EventRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,16 +19,19 @@ public class EventService {
     @Resource
     EventRepository eventRepository;
 
+    @Resource
+    UserEntity userEntity;
+
     private Event eventEntityToEvent(EventEntity eventEntity) {
-        return new Event(eventEntity.getEventName(), eventEntity.getKeyWord(), eventEntity.getUserId(), eventEntity.getVoteNum());
+        return new Event(eventEntity.getEventName(), eventEntity.getKeyWord(), eventEntity.getId(), eventEntity.getId());
     }
 
     private EventEntity eventToEventEntity(Event event) {
         return EventEntity.builder()
                 .eventName(event.getEventName())
                 .keyWord(event.getKeyWord())
-                .userId(event.getUserId())
-                .voteNum(event.getVoteNum())
+//                .user()
+//                .voteNum(event.getVoteNum())
                 .build();
     }
 
@@ -46,8 +50,8 @@ public class EventService {
         Optional<EventEntity> res = eventRepository.findById(eventId);
         if (!res.isPresent()) throw new CommonException(String.format("can not find event by id %d", eventId));
         EventEntity eventEntity = res.get();
-        if (!eventEntity.getUserId().equals(event.getUserId())) throw new CommonException("user id mismatch event");
-        eventEntity.setByEvent(event);
+        if (!eventEntity.getId().equals(event.getUserId())) throw new CommonException("user id mismatch event");
+//        eventEntity.setByEvent(event);
         eventRepository.save(eventEntity);
     }
 

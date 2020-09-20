@@ -24,14 +24,11 @@ public class EventEntity {
     @Column(name = "name")
     private String eventName;
     private String keyWord;
-    private Integer userId;
-    @ColumnDefault("0")
-    private Integer voteNum;
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private UserEntity user;
+    @OneToMany(mappedBy = "rsEvent",cascade = CascadeType.REMOVE)
+    private List<VoteEntity> voteEntities;
 
-    public void setByEvent(Event event) {
-        if (event.getEventName() != null) this.eventName = event.getEventName();
-        if (event.getKeyWord() != null) this.keyWord = event.getKeyWord();
-        if (event.getUserId() != null) this.userId = event.getUserId();
-        if (event.getVoteNum() != null) this.voteNum = event.getVoteNum();
-    }
+
 }
