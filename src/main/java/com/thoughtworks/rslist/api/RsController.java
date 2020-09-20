@@ -23,14 +23,16 @@ import java.util.Map;
 @RestController
 public class RsController {
 
-    @Resource
-    UserService userService;
+    private UserService userService;
 
-    @Resource
-    EventService eventService;
+    private EventService eventService;
 
-    @Resource
-    VoteService voteService;
+    private VoteService voteService;
+
+    RsController(UserService userService, EventService eventService) {
+        this.userService = userService;
+        this.eventService = eventService;
+    }
 
     @GetMapping("/rs/event/{id}")
     public ResponseEntity getOneEvent(@PathVariable int id) throws CommonException {

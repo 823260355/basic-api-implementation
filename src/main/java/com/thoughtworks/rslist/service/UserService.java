@@ -15,8 +15,11 @@ import java.util.Optional;
 @Service
 public class UserService {
 
-    @Resource
-    UserRepository userRepository;
+    private UserRepository userRepository;
+
+    UserService(UserRepository userRepository) {
+        this.userRepository = userRepository;
+    }
 
     private UserEntity userDtoToUserEntity(UserDto userDto) {
         return UserEntity.builder()

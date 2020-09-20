@@ -16,11 +16,10 @@ import java.util.Optional;
 @Service
 public class EventService {
 
-    @Resource
-    EventRepository eventRepository;
+    private EventRepository eventRepository;
 
-    @Resource
-    UserEntity userEntity;
+    public EventService(EventRepository eventRepository) {
+    }
 
     private Event eventEntityToEvent(EventEntity eventEntity) {
         return new Event(eventEntity.getEventName(), eventEntity.getKeyWord(), eventEntity.getId(), eventEntity.getId());

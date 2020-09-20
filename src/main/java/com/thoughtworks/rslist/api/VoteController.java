@@ -23,15 +23,11 @@ import java.util.List;
 
 @RestController
 public class VoteController {
-    @Autowired
-    VoteService voteService;
+    private VoteService voteService;
 
-    @Autowired
-    UserRepository userRepository;
-    @Autowired
-    EventRepository eventRepository;
-    @Autowired
-    VoteRepository voteRepository;
+    VoteController(VoteService voteService) {
+        this.voteService = voteService;
+    }
 
 
 
