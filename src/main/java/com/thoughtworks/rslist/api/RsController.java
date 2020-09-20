@@ -3,8 +3,6 @@ package com.thoughtworks.rslist.api;
 
 import com.thoughtworks.rslist.dto.RsEvent;
 import com.thoughtworks.rslist.entity.RsEventEntity;
-import com.thoughtworks.rslist.exciptions.CommentError;
-import com.thoughtworks.rslist.exciptions.MyException;
 import com.thoughtworks.rslist.repository.RsEventRepository;
 import com.thoughtworks.rslist.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -92,25 +90,20 @@ public class RsController {
 
   }
     @PostMapping("/rs/{rsEventId}")
-    public ResponseEntity addEventHaveEventNameAndKeyword(@Valid @RequestBody RsEvent rsEvent,@PathVariable Integer rsEventId){
+    public ResponseEntity updateRsEvent(@Valid @RequestBody RsEvent rsEvent,@PathVariable Integer rsEventId){
         if (!userRepository.existsById(rsEvent.getUserId())){
             return ResponseEntity.status(400).build();
         }
-        if (rsEventRepository.existsByEventName(rsEvent.getEventName()) && rsEventRepository.existsByKeyword(rsEvent.getKeyword())){
+        if (rsEvent.getEventName() != null && rsEvent.getKeyword() != null){
             RsEventEntity entity = RsEventEntity.builder()
-                .eventName(rsEvent.getEventName())
-                .keyword(rsEvent.getKeyword())
-                .userId(rsEvent.getUserId())
-                .build();
+                    .id(rsEventId)
+                   .eventName(rsEvent.getEventName())
+                   .keyword(rsEvent.getKeyword())
+                   .userId(rsEvent.getUserId())
+                   .build();
         rsEventRepository.save(entity);
         return ResponseEntity.created(null).build();
         }
-//        RsEventEntity entity = RsEventEntity.builder()
-//                .eventName(rsEvent.getEventName())
-//                .keyword(rsEvent.getKeyword())
-//                .userId(rsEvent.getUserId())
-//                .build();
-//        rsEventRepository.save(entity);
         return ResponseEntity.created(null).build();
 
     }
@@ -146,17 +139,17 @@ public class RsController {
 //      return ResponseEntity.ok(rsList.get(index-1));
 //  }
 
-  @ExceptionHandler({IndexOutOfBoundsException.class,NullPointerException.class,MyException.class, MethodArgumentNotValidException.class})
-    public ResponseEntity<CommentError> handleIndexOutOfBoundsException(Exception e){
-      if (e instanceof MethodArgumentNotValidException){
-          CommentError commentError =new CommentError();
-          commentError.setError("invalid param");
-          return ResponseEntity.badRequest().body(commentError);
-      }
-
-
-      CommentError commentError = new CommentError();
-      commentError.setError("invalid index");
-      return ResponseEntity.badRequest().body(commentError);
-  }
+//  @ExceptionHandler({IndexOutOfBoundsException.class,NullPointerException.class,MyException.class, MethodArgumentNotValidException.class})
+//    public ResponseEntity<CommentError> handleIndexOutOfBoundsException(Exception e){
+//      if (e instanceof MethodArgumentNotValidException){
+//          CommentError commentError =new CommentError();
+//          commentError.setError("invalid param");
+//          return ResponseEntity.badRequest().body(commentError);
+//      }
+//
+//
+//      CommentError commentError = new CommentError();
+//      commentError.setError("invalid index");
+//      return ResponseEntity.badRequest().body(commentError);
+//  }
 }

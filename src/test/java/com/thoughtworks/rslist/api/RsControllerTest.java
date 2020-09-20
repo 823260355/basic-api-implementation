@@ -103,6 +103,7 @@ class RsControllerTest {
         assertEquals("热搜事件1",rsEvents.get(0).getEventName());
         assertEquals("热搜分类1",rsEvents.get(0).getKeyword());
     }
+
 //    @Test
 //    void check_re_list() throws Exception {
 //        mockMvc.perform(get("/rs/list"))

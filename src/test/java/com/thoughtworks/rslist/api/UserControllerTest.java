@@ -256,6 +256,4 @@ class UserControllerTest {
         assertEquals(0,rsEvents.size());
     }
 
-
-
 }
